@@ -1,0 +1,137 @@
+import React, { useEffect } from 'react'
+import { Text, View, StyleSheet, Image } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import Swiper from 'react-native-swiper';
+import { TRANSPARENT, WHITE, BLACK_0x40 } from '../utils/colors';
+import { OPENSANCE_BOLD } from '../utils/fonts';
+import { Header, Sales, Loading } from '../components';
+import { addSlides } from '../actions/slides';
+import { API } from '../service';
+
+const HomeScreen = () => {
+  const { t } = useTranslation();
+  const dispatchStore = useDispatch();
+  const {
+    slides,
+    language,
+    token,
+  } = useSelector(({ slides, language, login }) => ({
+    slides: slides.slides,
+    language: language.language,
+    token: login.token,
+  }));
+
+  useEffect(() => {
+    dispatchStore(
+      addSlides(token)
+    );
+  }, []);
+
+  return (
+    <View style={styles.wrapper}>
+      <Header title='BAMBOO' />
+      {
+        (slides && slides.length) ?
+          (<Swiper
+            showsButtons={true}
+            dotColor={BLACK_0x40}
+            activeDotColor={WHITE}
+            nextButton={
+              <View style={styles.nextButton}>
+                <Text style={[styles.swiperButtons, styles.nextButtonText]}>›</Text>
+              </View>
+            }
+            prevButton={
+              <View style={styles.prevButton}>
+                <Text style={[styles.swiperButtons, styles.prevButtonText]}>‹</Text>
+              </View>
+            }
+          >
+            {slides.map(slide =>
+              <View style={styles.slide} key={slide.number.toString()}>
+                <Image
+                  style={styles.image}
+                  source={{ uri: `${API}/${slide.image ? slide.image : slide.product.image}` }}
+                />
+                <View style={styles.sliderContent}>
+                  <Sales slide={slide} language={language} />
+                </View>
+              </View>)}
+          </Swiper>) :
+          <Loading />
+      }
+      {!!slides.length &&
+        <Text style={styles.text}>Sales For Today</Text>
+      }
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sliderContent: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    backgroundColor: TRANSPARENT,
+    flexDirection: 'column',
+  },
+  slide: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  text: {
+    color: WHITE,
+    fontSize: 40,
+    position: 'absolute',
+    top: 74,
+    fontFamily: OPENSANCE_BOLD,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+  },
+  swiperButtons: {
+    fontSize: 70,
+    fontWeight: '200',
+    color: WHITE,
+  },
+  prevButton: {
+    width: 88,
+    height: 88,
+    backgroundColor: '#1F1F1F40',
+    borderRadius: 100,
+    position: 'relative',
+    left: -54,
+  },
+  nextButton: {
+    width: 88,
+    height: 88,
+    backgroundColor: '#1F1F1F40',
+    borderRadius: 100,
+    position: 'relative',
+    right: -54,
+  },
+  prevButtonText: {
+    position: 'absolute',
+    right: 15,
+  },
+  nextButtonText: {
+    position: 'absolute',
+    left: 15,
+  },
+});
+
+export default HomeScreen
