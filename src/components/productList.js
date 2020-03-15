@@ -8,14 +8,13 @@ import { API } from '../service';
 export const ProductList = ({ onItemPress, data }) => {
   const language = useSelector(({ language }) => language.language);
 
-  return data.map((item) =>
+  return !!data && data.length && data.map((item) =>
     (
       <TouchableOpacity
         style={styles.container}
         onPress={() => onItemPress(item)}
         key={item._id}
       >
-        {console.log(item, language)}
         <View style={styles.imageWrapper}>
           <Image style={[styles.image]}
             source={{ uri: `${API}${item.image}` }}

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigation } from 'react-navigation-hooks';
 import { addProducts } from '../../actions/products';
 import { OrderModal } from '../../components';
+import { openSlideProduct } from '../../actions/slides';
 
 const HookahProduct = () => {
   const [loading, setLoading] = useState(true);
@@ -20,10 +21,12 @@ const HookahProduct = () => {
     selectedCategory,
     products,
     token,
-  } = useSelector(({ categories, products, login }) => ({
+    openSlide,
+  } = useSelector(({ categories, products, login, slides }) => ({
     selectedCategory: categories.selectedCategory,
     products: products.products,
     token: login.token,
+    openSlide: slides.openSlide,
   }));
 
   useEffect(() => {
@@ -36,6 +39,14 @@ const HookahProduct = () => {
       setLoading(false);
     }
   }, [selectedCategory, products]);
+
+  useEffect(() => {
+    if (openSlide && openSlide.category._id === selectedCategory[BAR]) {
+      setProduct(openSlide);
+      setOrderModalVisibility(true);
+      dispatchStore(openSlideProduct(null));
+    }
+  }, [openSlide, selectedCategory]);
 
   const openProduct = useCallback((product) => {
     setProduct(product);

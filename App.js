@@ -10,7 +10,9 @@ import { Provider } from 'react-redux';
 import AppNavigator from './src/navigation/appNavigator';
 import store from './src/store';
 import { login } from './src/actions/login';
+import { setLanguage } from './src/actions/language';
 import './src/locale';
+import AsyncStorage from '@react-native-community/async-storage';
 
 console.disableYellowBox = true;
 
@@ -18,6 +20,10 @@ const App = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    AsyncStorage.getItem('locale').then(res => {
+      store.dispatch(setLanguage(res));
+    });
+
     store.dispatch(login(() => {
       setLoading(false);
     }));
@@ -34,7 +40,7 @@ const App = () => {
       <StatusBar barStyle="dark-content" />
       {!loading ? <Main /> :
         <View style={styles.loding}>
-          <ActivityIndicator size='large'/>
+          <ActivityIndicator size='large' />
         </View>}
     </Provider>
   )

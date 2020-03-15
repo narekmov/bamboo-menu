@@ -1,16 +1,18 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { Text, View, StyleSheet, Image } from 'react-native';
-import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigation } from 'react-navigation-hooks';
 import Swiper from 'react-native-swiper';
+import { openSlideProduct } from '../actions/slides';
 import { TRANSPARENT, WHITE, BLACK_0x40 } from '../utils/colors';
 import { OPENSANCE_BOLD } from '../utils/fonts';
 import { Header, Sales, Loading } from '../components';
 import { addSlides } from '../actions/slides';
 import { API } from '../service';
+import { mapIndex2name } from '../utils';
 
 const HomeScreen = () => {
-  const { t } = useTranslation();
+  const { navigate } = useNavigation();
   const dispatchStore = useDispatch();
   const {
     slides,
@@ -28,9 +30,15 @@ const HomeScreen = () => {
     );
   }, []);
 
+  const open = useCallback(slide => {     
+    dispatchStore(openSlideProduct(slide.product));
+    navigate(mapIndex2name(slide.product.category.section));
+  }, [navigate]);
+
   return (
     <View style={styles.wrapper}>
       <Header title='BAMBOO' />
+      {console.log(slides)}
       {
         (slides && slides.length) ?
           (<Swiper
@@ -54,8 +62,8 @@ const HomeScreen = () => {
                   style={styles.image}
                   source={{ uri: `${API}/${slide.image ? slide.image : slide.product.image}` }}
                 />
-                <View style={styles.sliderContent}>
-                  <Sales slide={slide} language={language} />
+                <View style={styles.sliderContent} >
+                  <Sales slide={slide} language={language} onPress={() => open(slide)} />
                 </View>
               </View>)}
           </Swiper>) :

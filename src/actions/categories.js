@@ -2,9 +2,7 @@ import { GET_CATEGORIES, SET_SELECTED_CATEGORY } from '../constants/categories';
 import { getCategories } from '../service';
 
 export const addCategories = (token, section_id) => dispatch => {
-  getCategories(token, section_id).then(categories => {
-    console.log(categories);
-    
+  getCategories(token, section_id).then(categories => {    
     dispatch({
       type: GET_CATEGORIES,
       payload: {

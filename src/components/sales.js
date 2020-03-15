@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { WHITE } from '../utils/colors';
 
-export const Sales = ({ slide, language }) => {
+export const Sales = ({ slide, language, onPress }) => {
   return (
-    <View style={styles.wrapper}>
+    <TouchableOpacity style={styles.wrapper} onPress={onPress}>
       <View style={styles.container}>
         <Text style={[styles.title, styles.textWhite]}>{slide.product.name[language]}</Text>
         <View style={styles.containerPrices}>
@@ -26,7 +26,7 @@ export const Sales = ({ slide, language }) => {
           </View>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   )
 };
 

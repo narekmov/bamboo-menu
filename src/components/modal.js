@@ -12,9 +12,7 @@ export const OrderModal = ({ isVisible, close, data }) => {
   const language = useSelector(({ language }) => language.language);
   const { orders = [] } = useSelector(({ order }) => ({ orders: order.orders }));
 
-  useEffect(() => {
-    console.log('data', data, orders);
-    
+  useEffect(() => {    
     if (data) {
       const index = orders.findIndex(e => e._id === data._id);
       setQuantity(index === -1 ? 1 : orders[index].quantity);

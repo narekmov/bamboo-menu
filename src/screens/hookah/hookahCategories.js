@@ -11,9 +11,10 @@ import { useNavigation } from 'react-navigation-hooks';
 
 const HookahCategories = () => {
   const { t } = useTranslation();
-  const { token, categories } = useSelector(({ categories, login }) => ({
+  const { token, categories, openSlide } = useSelector(({ categories, login, slides }) => ({
     categories: categories.categories,
     token: login.token,
+    openSlide: slides.openSlide,
   }));
   const dispatchStore = useDispatch();
   const { navigate } = useNavigation();
@@ -23,6 +24,13 @@ const HookahCategories = () => {
       addCategories(token, HOOKAH)
     );
   }, []);
+
+  useEffect(() => {
+    if (openSlide && openSlide.category.section === HOOKAH) {
+      openProducts(openSlide.category);
+    }
+  }, [openSlide]);
+
 
   const openProducts = useCallback((category) => {
     dispatchStore(setSelectedCategory(HOOKAH, category._id));

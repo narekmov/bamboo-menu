@@ -1,4 +1,4 @@
-const API = 'https://testapimenu.owlfinity.am';
+export const API = 'https://testapimenu.owlfinity.am';
 export const _API = 'http://192.168.1.3:3300';
 
 export const loginRequest = async () => {
@@ -31,7 +31,7 @@ export const getSlides = async (token) => {
 export const getProducts = async (token, sid = -1, cid = -1) => {
   const query = [];
   if (sid !== -1) {
-    query.push(`section_id=${encodeURI(sid)}`);
+    // query.push(`section_id=${encodeURI(sid)}`);
     if (cid !== -1) {
       query.push(`category_id=${encodeURI(cid)}`);
     }
